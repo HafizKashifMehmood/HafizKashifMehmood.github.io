@@ -634,6 +634,28 @@ section { padding: 64px 0; }
 }
 .btn-google:hover { border-color: var(--slate); }
 
+.auth-alert {
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  margin-bottom: 16px;
+  display: none;
+}
+
+.auth-alert.show { display: block; }
+
+.auth-alert.error {
+  background: #FDECEC;
+  color: #B3261E;
+  border: 1px solid #F5C2C0;
+}
+
+.auth-alert.success {
+  background: #E8F3EC;
+  color: #1E6B3E;
+  border: 1px solid #BFE3CC;
+}
+
 .auth-foot {
   text-align: center;
   font-size: 13px;
