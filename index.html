@@ -138,9 +138,13 @@
       "auth/wrong-password": "Incorrect password. Please try again.",
       "auth/invalid-credential": "Incorrect email or password.",
       "auth/too-many-requests": "Too many attempts. Please try again later.",
-      "auth/popup-closed-by-user": "Google sign-in was cancelled."
+      "auth/popup-closed-by-user": "Google sign-in was cancelled.",
+      "auth/popup-blocked": "Your browser blocked the Google sign-in popup. Please allow popups for this site and try again.",
+      "auth/unauthorized-domain": "This website's domain isn't authorized for Google sign-in yet. (Add it under Firebase → Authentication → Settings → Authorized domains.)",
+      "auth/operation-not-allowed": "Google sign-in isn't enabled yet for this project. (Enable it under Firebase → Authentication → Sign-in method.)",
+      "auth/cancelled-popup-request": "Google sign-in was cancelled."
     };
-    return map[code] || "Something went wrong. Please try again.";
+    return map[code] || ("Something went wrong (" + code + "). Please try again.");
   }
 </script>
 <script type="module" src="nav-auth.js"></script>
