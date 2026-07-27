@@ -301,37 +301,23 @@ section { padding: 64px 0; }
   display: block;
 }
 
-.card:hover {
-  border-color: var(--deep-blue);
-  transform: translateY(-3px);
-  box-shadow: 0 14px 30px -18px rgba(20,43,79,0.35);
-}
-
 .card-icon {
   width: 40px;
   height: 40px;
   border-radius: 9px;
   background: var(--bg-soft);
-  color: var(--deep-blue);
+  color: #B8C2D1;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  transition: color 0.25s ease;
 }
 
-/* Distinct hover colors per resource card, on both the border and the icon */
-.card-notes:hover { border-color: #1F4E8C; }
-.card-notes:hover .card-icon { background: #E7F1FB; color: #1F4E8C; }
-
-.card-assignments:hover { border-color: #1E7A46; }
-.card-assignments:hover .card-icon { background: #E7F6EC; color: #1E7A46; }
-
-.card-mock:hover { border-color: #B7791F; }
-.card-mock:hover .card-icon { background: #FDF3E0; color: #B7791F; }
-
-.card-contact:hover { border-color: #0F766E; }
-.card-contact:hover .card-icon { background: #E6F6F4; color: #0F766E; }
+/* Only the icon glyph changes color on hover — the rest of the card stays put */
+.card:hover .card-icon {
+  color: var(--deep-blue);
+}
 
 .card h3 {
   font-family: var(--font-display);
