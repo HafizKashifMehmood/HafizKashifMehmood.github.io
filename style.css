@@ -302,6 +302,7 @@ section { padding: 64px 0; }
 }
 
 .card-icon {
+  position: relative;
   width: 40px;
   height: 40px;
   border-radius: 9px;
@@ -311,18 +312,24 @@ section { padding: 64px 0; }
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
-  transition: color 0.25s ease;
 }
 
-/* Only the icon glyph changes color on hover — the rest of the card stays put */
-.card:hover .card-icon {
-  color: var(--deep-blue);
+.card-icon svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.25s ease;
 }
 
-/* Fill the icon shape solid on hover, instead of just outlining it */
-.card:hover .card-icon svg path {
-  fill: currentColor;
-}
+/* Outline version shows at rest; solid version is hidden */
+.card-icon .icon-outline { opacity: 1; }
+.card-icon .icon-solid { opacity: 0; }
+
+/* On hover, crossfade to the fully-colored solid icon */
+.card:hover .card-icon { color: var(--deep-blue); }
+.card:hover .card-icon .icon-outline { opacity: 0; }
+.card:hover .card-icon .icon-solid { opacity: 1; }
 
 .card h3 {
   font-family: var(--font-display);
