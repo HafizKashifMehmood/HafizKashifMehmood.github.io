@@ -537,6 +537,18 @@ section { padding: 64px 0; }
 .footer-row a { text-decoration: none; color: var(--slate); }
 .footer-row a:hover { color: var(--deep-blue); }
 
+.footer-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.footer-logo img {
+  height: 46px;
+  width: auto;
+  opacity: 0.9;
+}
+
 /* ---------------- Auth (Sign In / Sign Up) ---------------- */
 .auth-wrap {
   max-width: 420px;
