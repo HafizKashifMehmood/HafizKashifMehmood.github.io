@@ -33,7 +33,17 @@
     </ul>
     <a href="index.html" class="btn btn-primary" style="padding:9px 18px; font-size:14px;" id="nav-signin-btn">Sign In</a>
     </div>
+    <button class="nav-toggle" id="navToggleBtn" aria-label="Menu" aria-expanded="false">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
   </nav>
+  <div class="mobile-menu" id="mobileMenu">
+      <a href="home.html">Home</a>
+      <a href="notes.html">Notes</a>
+      <a href="assignments.html">Assignments</a>
+      <a href="mock-papers.html">Mock Papers</a>
+      <a href="contact.html">Contact</a>
+    </div>
 </header>
 
 <div class="auth-wrap">
@@ -46,6 +56,7 @@
     </div>
 
     <div class="auth-alert error" id="su-error"></div>
+    <div class="auth-alert success" id="su-success"></div>
 
     <form id="signup-form">
       <div class="field">
@@ -87,10 +98,12 @@
   import {
     createUserWithEmailAndPassword,
     updateProfile,
+    sendEmailVerification,
     signInWithPopup
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const errorBox = document.getElementById('su-error');
+  const successBox = document.getElementById('su-success');
   const submitBtn = document.getElementById('su-submit');
 
   function showError(message) {
@@ -109,7 +122,11 @@
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(cred.user, { displayName: name });
-      window.location.href = "notes.html";
+      await sendEmailVerification(cred.user);
+      successBox.textContent = "Account created! A welcome email has been sent to " + email + " — redirecting you now...";
+      successBox.classList.add('show');
+      submitBtn.textContent = "Account created ✓";
+      setTimeout(() => { window.location.href = "notes.html"; }, 2200);
     } catch (err) {
       showError(friendlyError(err.code));
       submitBtn.disabled = false;
@@ -120,8 +137,11 @@
   document.getElementById('google-signup-btn').addEventListener('click', async () => {
     errorBox.classList.remove('show');
     try {
-      await signInWithPopup(auth, googleProvider);
-      window.location.href = "notes.html";
+      const cred = await signInWithPopup(auth, googleProvider);
+      const firstName = (cred.user.displayName || "").split(" ")[0] || "there";
+      successBox.textContent = "Welcome, " + firstName + "! Your account is ready — redirecting you now...";
+      successBox.classList.add('show');
+      setTimeout(() => { window.location.href = "notes.html"; }, 1800);
     } catch (err) {
       showError(friendlyError(err.code));
     }
@@ -143,5 +163,24 @@
 </script>
 <script type="module" src="nav-auth.js"></script>
 
+<script>
+  (function () {
+    const btn = document.getElementById('navToggleBtn');
+    const menu = document.getElementById('mobileMenu');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', function () {
+      const isOpen = menu.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.classList.toggle('is-active', isOpen);
+    });
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        menu.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.classList.remove('is-active');
+      });
+    });
+  })();
+</script>
 </body>
 </html>

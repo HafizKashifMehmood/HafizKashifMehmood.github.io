@@ -33,7 +33,17 @@
     </ul>
     <a href="index.html" class="btn btn-primary" style="padding:9px 18px; font-size:14px;" id="nav-signin-btn">Sign In</a>
     </div>
+    <button class="nav-toggle" id="navToggleBtn" aria-label="Menu" aria-expanded="false">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
   </nav>
+  <div class="mobile-menu" id="mobileMenu">
+      <a href="home.html">Home</a>
+      <a href="notes.html">Notes</a>
+      <a href="assignments.html">Assignments</a>
+      <a href="mock-papers.html">Mock Papers</a>
+      <a href="contact.html">Contact</a>
+    </div>
 </header>
 
 <div class="auth-wrap">
@@ -149,5 +159,24 @@
 </script>
 <script type="module" src="nav-auth.js"></script>
 
+<script>
+  (function () {
+    const btn = document.getElementById('navToggleBtn');
+    const menu = document.getElementById('mobileMenu');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', function () {
+      const isOpen = menu.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.classList.toggle('is-active', isOpen);
+    });
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        menu.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.classList.remove('is-active');
+      });
+    });
+  })();
+</script>
 </body>
 </html>
