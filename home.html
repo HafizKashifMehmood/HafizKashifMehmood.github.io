@@ -80,12 +80,12 @@
 
 <section class="ledger-bg">
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal">
       <span class="section-label">About</span>
       <h2>Faculty Profile</h2>
     </div>
 
-    <div class="bio-block">
+    <div class="bio-block reveal" style="transition-delay:0.1s;">
       <div class="bio-photo">
         <img src="photo.jpg" alt="Hafiz Kashif Mehmood">
       </div>
@@ -110,35 +110,35 @@
 
 <section>
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal">
       <span class="section-label">Resources</span>
       <h2>Everything for QM &amp; PRC-2, in one place</h2>
       <p>Course notes, practice assignments, and full mock papers &mdash; updated through the semester.</p>
     </div>
 
     <div class="card-grid">
-      <a href="notes.html" class="card">
+      <a href="notes.html" class="card reveal" style="transition-delay:0s;">
         <div class="card-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h12l4 4v12H4z"/><path d="M16 4v4h4"/></svg>
         </div>
         <h3>Notes</h3>
         <p>Topic-wise notes covering the full QM &amp; PRC-2 syllabus.</p>
       </a>
-      <a href="assignments.html" class="card">
+      <a href="assignments.html" class="card reveal" style="transition-delay:0.1s;">
         <div class="card-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
         </div>
         <h3>Assignments</h3>
         <p>Practice questions and problem sets for regular coursework.</p>
       </a>
-      <a href="mock-papers.html" class="card">
+      <a href="mock-papers.html" class="card reveal" style="transition-delay:0.2s;">
         <div class="card-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 2h6l6 6v12a2 2 0 01-2 2H9a2 2 0 01-2-2V4a2 2 0 012-2z"/><path d="M9 13h6M9 17h6M9 9h2"/></svg>
         </div>
         <h3>Mock Papers</h3>
         <p>Full-length practice exams under real PRC-2 conditions.</p>
       </a>
-      <a href="contact.html" class="card">
+      <a href="contact.html" class="card reveal" style="transition-delay:0.3s;">
         <div class="card-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
         </div>
@@ -157,5 +157,19 @@
 </footer>
 
 <script type="module" src="nav-auth.js"></script>
+<script>
+  // Scroll-reveal: fades/slides elements into view as they enter the viewport.
+  // Home page only, by design — keeps Notes/Assignments/Papers fast and simple.
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach((el) => revealObserver.observe(el));
+</script>
 </body>
 </html>

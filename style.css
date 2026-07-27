@@ -665,6 +665,19 @@ section { padding: 64px 0; }
 
 .auth-foot a { color: var(--deep-blue); font-weight: 600; text-decoration: none; }
 .auth-foot a:hover { text-decoration: underline; }
+
+/* ---------------- Scroll reveal (Home page only) ---------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
 @media (max-width: 860px) {
   .hero-grid { grid-template-columns: 1fr; }
   .hero-visual { justify-self: center; max-width: 300px; margin-top: 20px; }
