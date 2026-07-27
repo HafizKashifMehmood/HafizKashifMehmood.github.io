@@ -319,6 +319,11 @@ section { padding: 64px 0; }
   color: var(--deep-blue);
 }
 
+/* Fill the icon shape solid on hover, instead of just outlining it */
+.card:hover .card-icon svg path {
+  fill: currentColor;
+}
+
 .card h3 {
   font-family: var(--font-display);
   font-size: 19px;
