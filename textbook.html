@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hafiz Kashif Mehmood | Quantitative Analysis for Business (Quantitative Methods) & PRC-2 — SKANS Multan</title>
+<meta name="description" content="Official CA textbook used for the PRC-2 paper, taught by Hafiz Kashif Mehmood at SKANS School of Accountancy, Multan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+
+    <button class="nav-toggle" id="navToggleBtn" aria-label="Menu" aria-expanded="false">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="home.html" class="brand">
+      <img src="logo.png" alt="" class="brand-mark" width="38" height="38">
+      <span class="brand-text">
+        <span class="brand-name">Hafiz Kashif Mehmood</span>
+        <span class="brand-sub">QM &middot; PRC-2 Faculty</span>
+      </span>
+    </a>
+    <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="home.html">Home</a></li>
+      <li><a href="notes.html">Notes</a></li>
+      <li><a href="assignments.html">Assignments</a></li>
+      <li><a href="mock-papers.html">Mock Papers</a></li>
+      <li><a href="textbook.html" class="active">Textbook</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="index.html" class="btn btn-primary" style="padding:9px 18px; font-size:14px;" id="nav-signin-btn">Sign In</a>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+      <a href="home.html">Home</a>
+      <a href="notes.html">Notes</a>
+      <a href="assignments.html">Assignments</a>
+      <a href="mock-papers.html">Mock Papers</a>
+      <a href="textbook.html" class="active">Textbook</a>
+      <a href="contact.html">Contact</a>
+    </div>
+</header>
+
+<section class="ledger-bg">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="section-label">Resources</span>
+      <h2>Textbook</h2>
+      <p>The official CA textbook used as the core reference for PRC-2.</p>
+    </div>
+
+    <div class="card-grid reveal" style="transition-delay:0.15s;">
+      <div class="card card-textbook">
+        <div class="card-icon" style="color: var(--deep-blue);">
+          <svg class="icon-solid" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="position:static; transform:none; opacity:1;"><path d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c.966 0 1.89.166 2.75.47a.75.75 0 001-.708V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z"/></svg>
+        </div>
+        <h3>PRC-2 Official Textbook</h3>
+        <p>This is the official CA textbook prescribed for the PRC-2 paper, used as the primary reference throughout the course.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-logo">
+      <img src="logo-full.png" alt="QMK Learning Castle">
+    </div>
+    <div class="footer-row">
+      <span>&copy; 2026 Hafiz Kashif Mehmood &middot; SKANS School of Accountancy, Multan Campus</span>
+      <span><a href="contact.html">Contact</a></span>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="nav-auth.js"></script>
+<script>
+  // Scroll-reveal: fades/slides elements into view as they enter the viewport.
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach((el) => revealObserver.observe(el));
+</script>
+<script>
+  (function () {
+    const btn = document.getElementById('navToggleBtn');
+    const menu = document.getElementById('mobileMenu');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', function () {
+      const isOpen = menu.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.classList.toggle('is-active', isOpen);
+    });
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        menu.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.classList.remove('is-active');
+      });
+    });
+  })();
+</script>
+</body>
+</html>
