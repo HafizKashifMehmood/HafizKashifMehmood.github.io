@@ -5,23 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign In — Hafiz Kashif Mehmood | QM & PRC-2</title>
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Fullscreen Welcome Overlay Container */
+    .fullscreen-welcome {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #ffffff;
+      z-index: 9999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .fullscreen-welcome.active {
+      display: flex;
+    }
+    .welcome-card {
+      max-width: 450px;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      border: 1px solid #e1e8ed;
+      background-color: #ffffff;
+    }
+    .welcome-icon {
+      font-size: 50px;
+      margin-bottom: 15px;
+    }
+    .welcome-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 12px;
+    }
+    .welcome-text {
+      font-size: 16px;
+      color: #4a5568;
+      line-height: 1.5;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Header / Nav -->
-<header class="site-header">
-  <nav class="nav">
-    <a href="home.html" class="brand">
-      <img src="logo.png" alt="Logo" class="brand-mark" width="38" height="38">
-      <span class="brand-text">
-        <span class="brand-name">Hafiz Kashif Mehmood</span>
-        <span class="brand-sub">QM &middot; PRC-2 Faculty</span>
-      </span>
-    </a>
-  </nav>
-</header>
+<!-- Fullscreen Welcome Container (Shows ONLY this on success) -->
+<div id="fullscreen-welcome" class="fullscreen-welcome">
+  <div class="welcome-card">
+    <div class="welcome-icon">👋</div>
+    <div class="welcome-title" id="welcome-heading">Welcome Back!</div>
+    <p class="welcome-text" id="welcome-subtext">Preparing your dashboard...</p>
+  </div>
+</div>
 
-<div class="auth-wrap">
+<!-- Original Auth Container -->
+<div class="auth-wrap" id="main-auth-container">
+  <header class="site-header">
+    <nav class="nav">
+      <a href="home.html" class="brand">
+        <img src="logo.png" alt="Logo" class="brand-mark" width="38" height="38">
+        <span class="brand-text">
+          <span class="brand-name">Hafiz Kashif Mehmood</span>
+          <span class="brand-sub">QM &middot; PRC-2 Faculty</span>
+        </span>
+      </a>
+    </nav>
+  </header>
+
   <div class="auth-card">
     <div class="auth-head">
       <img src="logo.png" alt="Logo" class="brand-mark">
@@ -29,9 +84,7 @@
       <p>Sign in to your account to access course material</p>
     </div>
 
-    <!-- Alert Boxes -->
     <div class="auth-alert error" id="si-error"></div>
-    <div class="auth-alert success" id="si-success"></div>
 
     <form id="signin-form">
       <div class="field">
@@ -63,26 +116,28 @@
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const errorBox = document.getElementById('si-error');
-  const successBox = document.getElementById('si-success');
   const submitBtn = document.getElementById('si-submit');
+  const mainAuthContainer = document.getElementById('main-auth-container');
+  const fullscreenWelcome = document.getElementById('fullscreen-welcome');
+  const welcomeHeading = document.getElementById('welcome-heading');
+  const welcomeSubtext = document.getElementById('welcome-subtext');
 
   function showError(msg) {
     errorBox.textContent = msg;
     errorBox.classList.add('show');
-    successBox.classList.remove('show');
   }
 
-  function showSuccess(msg) {
-    successBox.textContent = msg;
-    successBox.classList.add('show');
-    errorBox.classList.remove('show');
+  function showFullWelcomeMessage(heading, text) {
+    mainAuthContainer.style.display = 'none'; // Hide form completely
+    welcomeHeading.textContent = heading;
+    welcomeSubtext.textContent = text;
+    fullscreenWelcome.classList.add('active'); // Display full message view
   }
 
   // 1. Email / Password Sign-In
   document.getElementById('signin-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     errorBox.classList.remove('show');
-    successBox.classList.remove('show');
 
     submitBtn.disabled = true;
     submitBtn.textContent = "Signing in...";
@@ -96,10 +151,13 @@
       const displayName = cred.user.displayName || email.split('@')[0];
       const firstName = displayName.split(' ')[0];
       
-      // On-screen Welcome Back Message
-      showSuccess(`Welcome back, ${firstName}! Redirecting you to your portal...`);
+      // Show ONLY Full Welcome Screen
+      showFullWelcomeMessage(
+        `Welcome Back, ${firstName}!`, 
+        `Redirecting you to your portal dashboard...`
+      );
 
-      setTimeout(() => { window.location.href = "notes.html"; }, 1500);
+      setTimeout(() => { window.location.href = "notes.html"; }, 1800);
     } catch (err) {
       showError(friendlyError(err.code));
       submitBtn.disabled = false;
@@ -110,17 +168,19 @@
   // 2. Google Sign-In
   document.getElementById('google-signin-btn').addEventListener('click', async () => {
     errorBox.classList.remove('show');
-    successBox.classList.remove('show');
 
     try {
       const cred = await signInWithPopup(auth, googleProvider);
       const fullName = cred.user.displayName || "there";
       const firstName = fullName.split(' ')[0];
 
-      // On-screen Welcome Back Message
-      showSuccess(`Welcome back, ${firstName}! Redirecting you now...`);
+      // Show ONLY Full Welcome Screen
+      showFullWelcomeMessage(
+        `Welcome Back, ${firstName}!`, 
+        `Redirecting you to your portal dashboard...`
+      );
 
-      setTimeout(() => { window.location.href = "notes.html"; }, 1500);
+      setTimeout(() => { window.location.href = "notes.html"; }, 1800);
     } catch (err) {
       showError(friendlyError(err.code));
     }

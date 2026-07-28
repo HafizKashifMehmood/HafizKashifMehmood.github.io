@@ -13,23 +13,78 @@
       emailjs.init("bAsWom2LrnBMXHWDK");
     })();
   </script>
+
+  <style>
+    /* Fullscreen Overlay Container */
+    .fullscreen-welcome {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #ffffff;
+      z-index: 9999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .fullscreen-welcome.active {
+      display: flex;
+    }
+    .welcome-card {
+      max-width: 450px;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      border: 1px solid #e1e8ed;
+      background-color: #ffffff;
+    }
+    .welcome-icon {
+      font-size: 50px;
+      margin-bottom: 15px;
+    }
+    .welcome-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 12px;
+    }
+    .welcome-text {
+      font-size: 16px;
+      color: #4a5568;
+      line-height: 1.5;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Header / Nav -->
-<header class="site-header">
-  <nav class="nav">
-    <a href="home.html" class="brand">
-      <img src="logo.png" alt="Logo" class="brand-mark" width="38" height="38">
-      <span class="brand-text">
-        <span class="brand-name">Hafiz Kashif Mehmood</span>
-        <span class="brand-sub">QM &middot; PRC-2 Faculty</span>
-      </span>
-    </a>
-  </nav>
-</header>
+<!-- Fullscreen Welcome Container (Shows ONLY this on success) -->
+<div id="fullscreen-welcome" class="fullscreen-welcome">
+  <div class="welcome-card">
+    <div class="welcome-icon">🎉</div>
+    <div class="welcome-title" id="welcome-heading">Welcome!</div>
+    <p class="welcome-text" id="welcome-subtext">Preparing your dashboard...</p>
+  </div>
+</div>
 
-<div class="auth-wrap">
+<!-- Original Auth Container -->
+<div class="auth-wrap" id="main-auth-container">
+  <header class="site-header">
+    <nav class="nav">
+      <a href="home.html" class="brand">
+        <img src="logo.png" alt="Logo" class="brand-mark" width="38" height="38">
+        <span class="brand-text">
+          <span class="brand-name">Hafiz Kashif Mehmood</span>
+          <span class="brand-sub">QM &middot; PRC-2 Faculty</span>
+        </span>
+      </a>
+    </nav>
+  </header>
+
   <div class="auth-card">
     <div class="auth-head">
       <img src="logo.png" alt="Logo" class="brand-mark">
@@ -37,9 +92,7 @@
       <p>Sign up to access notes, assignments &amp; mock papers</p>
     </div>
 
-    <!-- Alert Boxes -->
     <div class="auth-alert error" id="su-error"></div>
-    <div class="auth-alert success" id="su-success"></div>
 
     <form id="signup-form">
       <div class="field">
@@ -78,27 +131,28 @@
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const errorBox = document.getElementById('su-error');
-  const successBox = document.getElementById('su-success');
   const submitBtn = document.getElementById('su-submit');
+  const mainAuthContainer = document.getElementById('main-auth-container');
+  const fullscreenWelcome = document.getElementById('fullscreen-welcome');
+  const welcomeHeading = document.getElementById('welcome-heading');
+  const welcomeSubtext = document.getElementById('welcome-subtext');
 
   function showError(message) {
     errorBox.textContent = message;
     errorBox.classList.add('show');
-    successBox.classList.remove('show');
   }
 
-  function showSuccess(message) {
-    successBox.textContent = message;
-    successBox.classList.add('show');
-    errorBox.classList.remove('show');
+  function showFullWelcomeMessage(heading, text) {
+    mainAuthContainer.style.display = 'none'; // Hide form completely
+    welcomeHeading.textContent = heading;
+    welcomeSubtext.textContent = text;
+    fullscreenWelcome.classList.add('active'); // Display full message view
   }
 
   // 1. Direct Form Registration (Email/Password)
   document.getElementById('signup-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     errorBox.classList.remove('show');
-    successBox.classList.remove('show');
-    
     submitBtn.disabled = true;
     submitBtn.textContent = "Creating account...";
 
@@ -111,7 +165,7 @@
       await updateProfile(cred.user, { displayName: name });
       await sendEmailVerification(cred.user);
 
-      // Trigger Welcome Email via EmailJS
+      // Trigger EmailJS welcome email
       try {
         await emailjs.send('service_1f5zg2k', 'template_jvp3n48', { 
           to_name: name, 
@@ -121,9 +175,11 @@
         console.error("EmailJS Error:", emailErr);
       }
 
-      // NEW USER: Show Welcome Message
-      showSuccess(`Welcome, ${name}! Your account was created successfully. Redirecting...`);
-      submitBtn.textContent = "Account created ✓";
+      // Show ONLY Full Welcome Screen
+      showFullWelcomeMessage(
+        `Welcome, ${name}!`, 
+        `Your account has been created successfully. Redirecting to your learning portal...`
+      );
 
       setTimeout(() => { window.location.href = "notes.html"; }, 2000);
     } catch (err) {
@@ -136,7 +192,6 @@
   // 2. Google Sign-Up / Sign-In
   document.getElementById('google-signup-btn').addEventListener('click', async () => {
     errorBox.classList.remove('show');
-    successBox.classList.remove('show');
 
     try {
       const cred = await signInWithPopup(auth, googleProvider);
@@ -145,7 +200,7 @@
       const firstName = fullName.split(" ")[0];
 
       if (details?.isNewUser) {
-        // NEW USER: Send welcome email + show creation welcome message
+        // NEW USER: Send EmailJS email + Full Welcome Screen
         try {
           await emailjs.send('service_1f5zg2k', 'template_jvp3n48', { 
             to_name: fullName, 
@@ -154,13 +209,20 @@
         } catch (emailErr) {
           console.error("EmailJS Error:", emailErr);
         }
-        showSuccess(`Welcome, ${firstName}! Your account is ready — redirecting...`);
+
+        showFullWelcomeMessage(
+          `Welcome, ${firstName}!`, 
+          `Your account is ready. Redirecting to your learning portal...`
+        );
       } else {
-        // EXISTING USER SIGNING IN ON SIGNUP PAGE: Skip email + show Welcome Back!
-        showSuccess(`Welcome back, ${firstName}! Redirecting you now...`);
+        // EXISTING USER SIGNING IN ON SIGNUP PAGE: No email + Full Welcome Back Screen
+        showFullWelcomeMessage(
+          `Welcome Back, ${firstName}!`, 
+          `You are signed in. Redirecting to your learning portal...`
+        );
       }
 
-      setTimeout(() => { window.location.href = "notes.html"; }, 1800);
+      setTimeout(() => { window.location.href = "notes.html"; }, 2000);
     } catch (err) {
       showError(friendlyError(err.code));
     }
