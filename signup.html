@@ -11,6 +11,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+
+<!-- EmailJS SDK Integration -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script type="text/javascript">
+  (function(){
+    // Initialized with your EmailJS Public Key
+    emailjs.init("bAsWom2LrnBMXHWDK");
+  })();
+</script>
 </head>
 <body>
 
@@ -125,10 +134,27 @@
     const name = document.getElementById('su-name').value.trim();
     const email = document.getElementById('su-email').value.trim();
     const password = document.getElementById('su-password').value;
+    
     try {
+      // 1. Firebase user creation
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(cred.user, { displayName: name });
       await sendEmailVerification(cred.user);
+
+      // 2. Dispatch EmailJS Welcome Email
+      try {
+        await emailjs.send(
+          'service_1f5zg2k',
+          'template_jvp3n48',
+          {
+            to_name: name,
+            email: email
+          }
+        );
+      } catch (emailErr) {
+        console.error("EmailJS failed to send email:", emailErr);
+      }
+
       successBox.textContent = "Account created! A welcome email has been sent to " + email + " — redirecting you now...";
       successBox.classList.add('show');
       submitBtn.textContent = "Account created ✓";
@@ -145,6 +171,23 @@
     try {
       const cred = await signInWithPopup(auth, googleProvider);
       const firstName = (cred.user.displayName || "").split(" ")[0] || "there";
+      const fullName = cred.user.displayName || "Student";
+      const email = cred.user.email;
+
+      // Send Welcome Email for Google Signups
+      try {
+        await emailjs.send(
+          'service_1f5zg2k',
+          'template_jvp3n48',
+          {
+            to_name: fullName,
+            email: email
+          }
+        );
+      } catch (emailErr) {
+        console.error("EmailJS Google signup email failed:", emailErr);
+      }
+
       successBox.textContent = "Welcome, " + firstName + "! Your account is ready — redirecting you now...";
       successBox.classList.add('show');
       setTimeout(() => { window.location.href = "notes.html"; }, 1800);
