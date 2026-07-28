@@ -15,8 +15,8 @@
   </script>
 
   <style>
-    /* Fullscreen Overlay Container */
-    .fullscreen-welcome {
+    /* Fullscreen Dedicated Welcome Overlay */
+    #fullscreen-welcome {
       display: none;
       position: fixed;
       top: 0;
@@ -24,7 +24,7 @@
       width: 100vw;
       height: 100vh;
       background-color: #ffffff;
-      z-index: 9999;
+      z-index: 99999;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -32,8 +32,8 @@
       padding: 20px;
       box-sizing: border-box;
     }
-    .fullscreen-welcome.active {
-      display: flex;
+    #fullscreen-welcome.active {
+      display: flex !important;
     }
     .welcome-card {
       max-width: 450px;
@@ -62,16 +62,16 @@
 </head>
 <body>
 
-<!-- Fullscreen Welcome Container (Shows ONLY this on success) -->
-<div id="fullscreen-welcome" class="fullscreen-welcome">
+<!-- Fullscreen Welcome View -->
+<div id="fullscreen-welcome">
   <div class="welcome-card">
-    <div class="welcome-icon">🎉</div>
-    <div class="welcome-title" id="welcome-heading">Welcome!</div>
+    <div class="welcome-icon" id="welcome-icon">👋</div>
+    <div class="welcome-title" id="welcome-heading">Welcome Back!</div>
     <p class="welcome-text" id="welcome-subtext">Preparing your dashboard...</p>
   </div>
 </div>
 
-<!-- Original Auth Container -->
+<!-- Main Signup Container -->
 <div class="auth-wrap" id="main-auth-container">
   <header class="site-header">
     <nav class="nav">
@@ -134,6 +134,7 @@
   const submitBtn = document.getElementById('su-submit');
   const mainAuthContainer = document.getElementById('main-auth-container');
   const fullscreenWelcome = document.getElementById('fullscreen-welcome');
+  const welcomeIcon = document.getElementById('welcome-icon');
   const welcomeHeading = document.getElementById('welcome-heading');
   const welcomeSubtext = document.getElementById('welcome-subtext');
 
@@ -142,11 +143,12 @@
     errorBox.classList.add('show');
   }
 
-  function showFullWelcomeMessage(heading, text) {
-    mainAuthContainer.style.display = 'none'; // Hide form completely
+  function showDedicatedWelcome(icon, heading, text) {
+    mainAuthContainer.style.display = 'none'; // Completely hide form
+    welcomeIcon.textContent = icon;
     welcomeHeading.textContent = heading;
     welcomeSubtext.textContent = text;
-    fullscreenWelcome.classList.add('active'); // Display full message view
+    fullscreenWelcome.classList.add('active'); // Display fullscreen welcome card
   }
 
   // 1. Direct Form Registration (Email/Password)
@@ -175,13 +177,13 @@
         console.error("EmailJS Error:", emailErr);
       }
 
-      // Show ONLY Full Welcome Screen
-      showFullWelcomeMessage(
+      showDedicatedWelcome(
+        "🎉", 
         `Welcome, ${name}!`, 
-        `Your account has been created successfully. Redirecting to your learning portal...`
+        "Your account has been created successfully. Redirecting to your portal..."
       );
 
-      setTimeout(() => { window.location.href = "notes.html"; }, 2000);
+      setTimeout(() => { window.location.href = "notes.html"; }, 2500);
     } catch (err) {
       showError(friendlyError(err.code));
       submitBtn.disabled = false;
@@ -200,7 +202,7 @@
       const firstName = fullName.split(" ")[0];
 
       if (details?.isNewUser) {
-        // NEW USER: Send EmailJS email + Full Welcome Screen
+        // NEW GOOGLE USER: Send email + Show Welcome Screen
         try {
           await emailjs.send('service_1f5zg2k', 'template_jvp3n48', { 
             to_name: fullName, 
@@ -210,19 +212,21 @@
           console.error("EmailJS Error:", emailErr);
         }
 
-        showFullWelcomeMessage(
+        showDedicatedWelcome(
+          "🎉", 
           `Welcome, ${firstName}!`, 
-          `Your account is ready. Redirecting to your learning portal...`
+          "Your account is ready. Redirecting to your learning portal..."
         );
       } else {
-        // EXISTING USER SIGNING IN ON SIGNUP PAGE: No email + Full Welcome Back Screen
-        showFullWelcomeMessage(
+        // EXISTING GOOGLE USER ON SIGNUP PAGE: Show Dedicated Welcome Back Screen (No Email)
+        showDedicatedWelcome(
+          "👋", 
           `Welcome Back, ${firstName}!`, 
-          `You are signed in. Redirecting to your learning portal...`
+          "You already have an account. Redirecting you to your portal..."
         );
       }
 
-      setTimeout(() => { window.location.href = "notes.html"; }, 2000);
+      setTimeout(() => { window.location.href = "notes.html"; }, 2500);
     } catch (err) {
       showError(friendlyError(err.code));
     }
