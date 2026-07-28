@@ -1,29 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign Up — Hafiz Kashif Mehmood | QM & PRC-2</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — Hafiz Kashif Mehmood | QM & PRC-2</title>
+  <link rel="stylesheet" href="style.css">
 
-<!-- EmailJS SDK Integration -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script type="text/javascript">
-  (function(){
-    emailjs.init("bAsWom2LrnBMXHWDK");
-  })();
-</script>
+  <!-- EmailJS SDK Integration -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function(){
+      emailjs.init("bAsWom2LrnBMXHWDK");
+    })();
+  </script>
 </head>
 <body>
+
+<!-- Header / Nav -->
+<header class="site-header">
+  <nav class="nav">
+    <a href="home.html" class="brand">
+      <img src="logo.png" alt="Logo" class="brand-mark" width="38" height="38">
+      <span class="brand-text">
+        <span class="brand-name">Hafiz Kashif Mehmood</span>
+        <span class="brand-sub">QM &middot; PRC-2 Faculty</span>
+      </span>
+    </a>
+  </nav>
+</header>
 
 <div class="auth-wrap">
   <div class="auth-card">
     <div class="auth-head">
-      <img src="logo.png" alt="" class="brand-mark">
+      <img src="logo.png" alt="Logo" class="brand-mark">
       <h2>Create your account</h2>
       <p>Sign up to access notes, assignments &amp; mock papers</p>
     </div>
 
+    <!-- Alert Boxes -->
     <div class="auth-alert error" id="su-error"></div>
     <div class="auth-alert success" id="su-success"></div>
 
@@ -70,14 +84,24 @@
   function showError(message) {
     errorBox.textContent = message;
     errorBox.classList.add('show');
+    successBox.classList.remove('show');
   }
 
-  // Direct Form Registration
+  function showSuccess(message) {
+    successBox.textContent = message;
+    successBox.classList.add('show');
+    errorBox.classList.remove('show');
+  }
+
+  // 1. Direct Form Registration (Email/Password)
   document.getElementById('signup-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     errorBox.classList.remove('show');
+    successBox.classList.remove('show');
+    
     submitBtn.disabled = true;
     submitBtn.textContent = "Creating account...";
+
     const name = document.getElementById('su-name').value.trim();
     const email = document.getElementById('su-email').value.trim();
     const password = document.getElementById('su-password').value;
@@ -87,17 +111,20 @@
       await updateProfile(cred.user, { displayName: name });
       await sendEmailVerification(cred.user);
 
-      // Trigger Welcome EmailJS
+      // Trigger Welcome Email via EmailJS
       try {
-        await emailjs.send('service_1f5zg2k', 'template_jvp3n48', { to_name: name, email: email });
+        await emailjs.send('service_1f5zg2k', 'template_jvp3n48', { 
+          to_name: name, 
+          email: email 
+        });
       } catch (emailErr) {
-        console.error("EmailJS error:", emailErr);
+        console.error("EmailJS Error:", emailErr);
       }
 
-      // On-screen message for NEW account
-      successBox.textContent = `Welcome, ${name}! Your account was created successfully. Redirecting...`;
-      successBox.classList.add('show');
+      // NEW USER: Show Welcome Message
+      showSuccess(`Welcome, ${name}! Your account was created successfully. Redirecting...`);
       submitBtn.textContent = "Account created ✓";
+
       setTimeout(() => { window.location.href = "notes.html"; }, 2000);
     } catch (err) {
       showError(friendlyError(err.code));
@@ -106,9 +133,11 @@
     }
   });
 
-  // Google Sign-Up / Sign-In
+  // 2. Google Sign-Up / Sign-In
   document.getElementById('google-signup-btn').addEventListener('click', async () => {
     errorBox.classList.remove('show');
+    successBox.classList.remove('show');
+
     try {
       const cred = await signInWithPopup(auth, googleProvider);
       const details = getAdditionalUserInfo(cred);
@@ -116,19 +145,21 @@
       const firstName = fullName.split(" ")[0];
 
       if (details?.isNewUser) {
-        // NEW USER: Send email + display welcome message
+        // NEW USER: Send welcome email + show creation welcome message
         try {
-          await emailjs.send('service_1f5zg2k', 'template_jvp3n48', { to_name: fullName, email: cred.user.email });
+          await emailjs.send('service_1f5zg2k', 'template_jvp3n48', { 
+            to_name: fullName, 
+            email: cred.user.email 
+          });
         } catch (emailErr) {
-          console.error("EmailJS error:", emailErr);
+          console.error("EmailJS Error:", emailErr);
         }
-        successBox.textContent = `Welcome, ${firstName}! Your account is ready — redirecting...`;
+        showSuccess(`Welcome, ${firstName}! Your account is ready — redirecting...`);
       } else {
-        // RETURNING USER: Skip email + display welcome back message
-        successBox.textContent = `Welcome back, ${firstName}! Redirecting you now...`;
+        // EXISTING USER SIGNING IN ON SIGNUP PAGE: Skip email + show Welcome Back!
+        showSuccess(`Welcome back, ${firstName}! Redirecting you now...`);
       }
 
-      successBox.classList.add('show');
       setTimeout(() => { window.location.href = "notes.html"; }, 1800);
     } catch (err) {
       showError(friendlyError(err.code));
@@ -137,9 +168,9 @@
 
   function friendlyError(code) {
     const map = {
-      "auth/email-already-in-use": "An account with this email already exists. Try signing in instead.",
+      "auth/email-already-in-use": "An account with this email already exists. Please try signing in instead.",
       "auth/invalid-email": "Please enter a valid email address.",
-      "auth/weak-password": "Password should be at least 6 characters."
+      "auth/weak-password": "Password should be at least 6 characters long."
     };
     return map[code] || ("Something went wrong (" + code + "). Please try again.");
   }

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign In — Hafiz Kashif Mehmood | QM & PRC-2</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Hafiz Kashif Mehmood | QM & PRC-2</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -12,7 +12,7 @@
 <header class="site-header">
   <nav class="nav">
     <a href="home.html" class="brand">
-      <img src="logo.png" alt="" class="brand-mark" width="38" height="38">
+      <img src="logo.png" alt="Logo" class="brand-mark" width="38" height="38">
       <span class="brand-text">
         <span class="brand-name">Hafiz Kashif Mehmood</span>
         <span class="brand-sub">QM &middot; PRC-2 Faculty</span>
@@ -24,7 +24,7 @@
 <div class="auth-wrap">
   <div class="auth-card">
     <div class="auth-head">
-      <img src="logo.png" alt="" class="brand-mark">
+      <img src="logo.png" alt="Logo" class="brand-mark">
       <h2>Welcome Back</h2>
       <p>Sign in to your account to access course material</p>
     </div>
@@ -69,12 +69,21 @@
   function showError(msg) {
     errorBox.textContent = msg;
     errorBox.classList.add('show');
+    successBox.classList.remove('show');
   }
 
-  // Email / Password Sign-In
+  function showSuccess(msg) {
+    successBox.textContent = msg;
+    successBox.classList.add('show');
+    errorBox.classList.remove('show');
+  }
+
+  // 1. Email / Password Sign-In
   document.getElementById('signin-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     errorBox.classList.remove('show');
+    successBox.classList.remove('show');
+
     submitBtn.disabled = true;
     submitBtn.textContent = "Signing in...";
 
@@ -84,12 +93,11 @@
     try {
       const cred = await signInWithEmailAndPassword(auth, email, password);
       
-      // Get display name or fallback to name part of email
       const displayName = cred.user.displayName || email.split('@')[0];
+      const firstName = displayName.split(' ')[0];
       
-      // Display Welcome Back message on screen
-      successBox.textContent = `Welcome back, ${displayName}! Redirecting you to your portal...`;
-      successBox.classList.add('show');
+      // On-screen Welcome Back Message
+      showSuccess(`Welcome back, ${firstName}! Redirecting you to your portal...`);
 
       setTimeout(() => { window.location.href = "notes.html"; }, 1500);
     } catch (err) {
@@ -99,16 +107,18 @@
     }
   });
 
-  // Google Sign-In
+  // 2. Google Sign-In
   document.getElementById('google-signin-btn').addEventListener('click', async () => {
     errorBox.classList.remove('show');
+    successBox.classList.remove('show');
+
     try {
       const cred = await signInWithPopup(auth, googleProvider);
-      const name = cred.user.displayName || "there";
+      const fullName = cred.user.displayName || "there";
+      const firstName = fullName.split(' ')[0];
 
-      // Display Welcome Back message on screen
-      successBox.textContent = `Welcome back, ${name}! Redirecting you now...`;
-      successBox.classList.add('show');
+      // On-screen Welcome Back Message
+      showSuccess(`Welcome back, ${firstName}! Redirecting you now...`);
 
       setTimeout(() => { window.location.href = "notes.html"; }, 1500);
     } catch (err) {
