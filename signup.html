@@ -144,11 +144,11 @@
   }
 
   function showDedicatedWelcome(icon, heading, text) {
-    mainAuthContainer.style.display = 'none'; // Completely hide form
+    mainAuthContainer.style.display = 'none';
     welcomeIcon.textContent = icon;
     welcomeHeading.textContent = heading;
     welcomeSubtext.textContent = text;
-    fullscreenWelcome.classList.add('active'); // Display fullscreen welcome card
+    fullscreenWelcome.classList.add('active');
   }
 
   // 1. Direct Form Registration (Email/Password)
@@ -167,7 +167,7 @@
       await updateProfile(cred.user, { displayName: name });
       await sendEmailVerification(cred.user);
 
-      // Trigger EmailJS welcome email
+      // Trigger EmailJS welcome email for NEW user
       try {
         await emailjs.send('service_1f5zg2k', 'template_jvp3n48', { 
           to_name: name, 
@@ -202,7 +202,7 @@
       const firstName = fullName.split(" ")[0];
 
       if (details?.isNewUser) {
-        // NEW GOOGLE USER: Send email + Show Welcome Screen
+        // NEW GOOGLE USER: Send email + Welcome Screen
         try {
           await emailjs.send('service_1f5zg2k', 'template_jvp3n48', { 
             to_name: fullName, 
@@ -218,11 +218,11 @@
           "Your account is ready. Redirecting to your learning portal..."
         );
       } else {
-        // EXISTING GOOGLE USER ON SIGNUP PAGE: Show Dedicated Welcome Back Screen (No Email)
+        // EXISTING GOOGLE USER: Display Welcome Back Screen (Identical to Sign-In page)
         showDedicatedWelcome(
           "👋", 
           `Welcome Back, ${firstName}!`, 
-          "You already have an account. Redirecting you to your portal..."
+          "Redirecting you to your portal dashboard..."
         );
       }
 
@@ -234,7 +234,7 @@
 
   function friendlyError(code) {
     const map = {
-      "auth/email-already-in-use": "An account with this email already exists. Please try signing in instead.",
+      "auth/email-already-in-use": "An account with this email already exists. Please go to the sign in page to continue.",
       "auth/invalid-email": "Please enter a valid email address.",
       "auth/weak-password": "Password should be at least 6 characters long."
     };
