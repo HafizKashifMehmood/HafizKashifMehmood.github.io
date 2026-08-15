@@ -16,7 +16,7 @@ onAuthStateChanged(auth, (user) => {
     };
   } else {
     btn.textContent = 'Sign In';
-    btn.href = 'index.html';
+    btn.href = 'signin.html';
     btn.onclick = null;
   }
 });
