@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hafizkashifmehmood.github.io/sitemap.xml
