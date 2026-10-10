@@ -346,24 +346,40 @@ section { padding: 64px 0; }
   font-weight: 600;
   margin: 12px 0 8px;
 }
-.discover-topics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  list-style: none;
-  margin: 0 0 6px;
-  padding: 0;
+.notes-subgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 4px;
+  align-items: start;
 }
-.discover-topics li {
-  margin: 0;
-  padding: 7px 12px;
+.notes-subcard {
   background: var(--bg-soft);
   border: 1px solid var(--line);
-  border-radius: 999px;
-  font-size: 13px;
-  color: var(--ink-navy);
-  line-height: 1.3;
+  border-radius: 12px;
+  padding: 16px 18px 18px;
 }
+.notes-subcard .discover-sub {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+.notes-subcard ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--slate);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.notes-subcard li {
+  margin-bottom: 6px;
+}
+.notes-subcard li:last-child {
+  margin-bottom: 0;
+}
+@media (max-width: 720px) {
+  .notes-subgrid { grid-template-columns: 1fr; }
+}
+
 .discover-card ul:not(.discover-topics) {
   margin: 0;
   padding-left: 18px;
