@@ -286,9 +286,13 @@ section { padding: 64px 0; }
 /* ---------------- Discover / overview ---------------- */
 .discover-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 18px;
-  align-items: start;
+  align-items: stretch;
+}
+.discover-notes {
+  grid-column: 1 / -1;
+  border-top-color: #1F4E8C;
 }
 .discover-card {
   background: var(--paper);
@@ -298,12 +302,13 @@ section { padding: 64px 0; }
   box-shadow: 0 4px 14px -10px rgba(20, 43, 79, 0.18);
   border-top: 3px solid var(--deep-blue);
   transition: box-shadow 0.15s ease, transform 0.15s ease;
+  height: 100%;
+  box-sizing: border-box;
 }
 .discover-card:hover {
   box-shadow: 0 10px 24px -12px rgba(20, 43, 79, 0.22);
   transform: translateY(-2px);
 }
-.discover-notes { border-top-color: #1F4E8C; }
 .discover-assignments { border-top-color: #2F6FAD; }
 .discover-mock { border-top-color: #4FA3D1; }
 .discover-textbook { border-top-color: #142B4F; }
@@ -341,6 +346,11 @@ section { padding: 64px 0; }
   font-weight: 600;
   margin: 12px 0 6px;
 }
+.discover-notes-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 40px;
+}
 .discover-card ul {
   margin: 0;
   padding-left: 18px;
@@ -355,8 +365,10 @@ section { padding: 64px 0; }
   line-height: 1.55;
   margin: 0;
 }
-@media (max-width: 720px) {
+@media (max-width: 900px) {
   .discover-grid { grid-template-columns: 1fr; }
+  .discover-notes { grid-column: auto; }
+  .discover-notes-columns { grid-template-columns: 1fr; }
 }
 
 /* ---------------- Cards / grids ---------------- */
